@@ -8,9 +8,7 @@ import com.task.vasskob.jobqueuetest.job.HeaderLoadJob;
 import com.task.vasskob.jobqueuetest.job.TitleLoadJob;
 import com.task.vasskob.jobqueuetest.view.MainView;
 
-import java.io.Serializable;
-
-public class MainPresenter implements IMainPresenter {
+public class MainPresenter implements IMainPresenter{
 
     private static final String TAG = MainPresenter.class.getSimpleName();
     private JobManager mJobManager;
@@ -43,9 +41,9 @@ public class MainPresenter implements IMainPresenter {
     }
 
     private void initJobManager() {
-        Params paramsLow = new Params(Constants.PRIORITY_LOW).requireNetwork().persist().delayInMs(2000);
-        Params paramsMiddle = new Params(Constants.PRIORITY_MIDDLE).requireNetwork().persist().delayInMs(2000);
-        Params paramsHeight = new Params(Constants.PRIORITY_HEIGHT).requireNetwork().persist();
+        Params paramsLow = new Params(Constants.PRIORITY_LOW).requireNetwork().delayInMs(3000);
+        Params paramsMiddle = new Params(Constants.PRIORITY_MIDDLE).requireNetwork().delayInMs(2000);
+        Params paramsHeight = new Params(Constants.PRIORITY_HEIGHT).requireNetwork();
 
         HeaderLoadJob jobHeader = new HeaderLoadJob(paramsHeight, listener);
         TitleLoadJob jobTitle = new TitleLoadJob(paramsMiddle, listener);
@@ -66,7 +64,7 @@ public class MainPresenter implements IMainPresenter {
         mView = null;
     }
 
-    public interface OnDataReadyListener extends Serializable {
+    public interface OnDataReadyListener {
         void onHeaderReady(String data);
         void onTitleReady(String data);
         void onDetailReady(String data);

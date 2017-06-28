@@ -37,6 +37,7 @@ public class HeaderLoadJob extends Job {
         request = new Request.Builder()
                 .url(Constants.URL)
                 .build();
+
     }
 
     @Override
@@ -49,8 +50,10 @@ public class HeaderLoadJob extends Job {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                Log.d(TAG, "HeaderLoadJob onResponse: " + response.toString());
-                listener.onHeaderReady(response.toString());
+                String json = response.body().string();
+
+                listener.onHeaderReady(json);
+                Log.d(TAG, "HeaderLoadJob onResponse: !!! " + json);
             }
         });
     }

@@ -22,8 +22,8 @@ public class DetailLoadJob extends Job {
     private static final String TAG = DetailLoadJob.class.getSimpleName();
     private final MainPresenter.OnDataReadyListener listener;
 
-    private OkHttpClient client;
-    private Request request;
+    private  OkHttpClient client;
+    private  Request request;
 
     public DetailLoadJob(Params params, MainPresenter.OnDataReadyListener listener) {
         super(params);
@@ -34,6 +34,7 @@ public class DetailLoadJob extends Job {
     public void onAdded() {
         Log.d(TAG, "HeaderLoadJob onAdded: ");
         client = new OkHttpClient();
+
         request = new Request.Builder()
                 .url(Constants.URL)
                 .build();
@@ -49,8 +50,10 @@ public class DetailLoadJob extends Job {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                Log.d(TAG, "HeaderLoadJob onResponse: " + response.toString());
-                listener.onDetailReady(response.toString());
+                String json = response.body().string();
+
+                listener.onDetailReady(json);
+
             }
         });
     }

@@ -48,8 +48,8 @@ public class TitleLoadJob extends Job {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                Log.d(TAG, "HeaderLoadJob onResponse: " + response.toString());
-                listener.onTitleReady(response.toString());
+                String json = response.body().string();
+                listener.onTitleReady(json);
             }
         });
     }
