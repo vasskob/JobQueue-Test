@@ -26,7 +26,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'\
+    testCompile 'junit:junit:4.12' \
 
     //JobQue
     compile 'com.birbit:android-priority-jobqueue:2.0.1'
@@ -37,5 +37,12 @@ dependencies {
     // ButterKnife
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+
+    //  Gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
+
+    // Glide
+    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
 
 }

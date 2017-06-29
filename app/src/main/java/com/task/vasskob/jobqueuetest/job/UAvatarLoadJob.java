@@ -12,32 +12,34 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.task.vasskob.jobqueuetest.Constants;
+import com.task.vasskob.jobqueuetest.model.User;
 import com.task.vasskob.jobqueuetest.presenter.MainPresenter;
+import com.task.vasskob.jobqueuetest.utils.Parser;
 
 import java.io.IOException;
 
 
-public class DetailLoadJob extends Job {
+public class UAvatarLoadJob extends Job {
 
-    private static final String TAG = DetailLoadJob.class.getSimpleName();
+    private static final String TAG = UAvatarLoadJob.class.getSimpleName();
     private final MainPresenter.OnDataReadyListener listener;
 
-    private  OkHttpClient client;
-    private  Request request;
+    private OkHttpClient client;
+    private Request request;
 
-    public DetailLoadJob(Params params, MainPresenter.OnDataReadyListener listener) {
+    public UAvatarLoadJob(Params params, MainPresenter.OnDataReadyListener listener) {
         super(params);
         this.listener = listener;
     }
 
     @Override
     public void onAdded() {
-        Log.d(TAG, "HeaderLoadJob onAdded: ");
+        Log.d(TAG, "UAvatarLoadJob onAdded: ");
         client = new OkHttpClient();
-
         request = new Request.Builder()
                 .url(Constants.URL)
                 .build();
+
     }
 
     @Override
@@ -45,27 +47,28 @@ public class DetailLoadJob extends Job {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                Log.e(TAG, "HeaderLoadJob OkHttpClient onFailure: ", e);
+                Log.e(TAG, "UAvatarLoadJob OkHttpClient onFailure: ", e);
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 String json = response.body().string();
+                User user = Parser.getParsedUser(json);
 
-                listener.onDetailReady(json);
-
+                listener.onUAvatarReady(user.getAvatar_url());
+                Log.d(TAG, "UAvatarLoadJob onResponse: !!! " + json);
             }
         });
     }
 
     @Override
     protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-        Log.d(TAG, "HeaderLoadJob onCancel: ");
+        Log.d(TAG, "UAvatarLoadJob onCancel: ");
     }
 
     @Override
     protected RetryConstraint shouldReRunOnThrowable(@NonNull Throwable throwable, int runCount, int maxRunCount) {
-        Log.d(TAG, "HeaderLoadJob shouldReRunOnThrowable: ");
+        Log.d(TAG, "UAvatarLoadJob shouldReRunOnThrowable: ");
         return null;
     }
 }

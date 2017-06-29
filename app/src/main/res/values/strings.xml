@@ -2,7 +2,7 @@
     <string name="app_name">JobQueue TEst</string>
     <string name="load">Load</string>
     <string name="clean">Clean</string>
-    <string name="detail">Details</string>
-    <string name="title">Title</string>
-    <string name="header">Header</string>
+    <string name="user_repo_count">Repo Count: %d</string>
+    <string name="user_name">User Name: %s</string>
+    <string name="user_avatar">User Avatar</string>
 </resources>
