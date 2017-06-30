@@ -8,6 +8,7 @@
     tools:context="com.task.vasskob.jobqueuetest.view.MainActivity">
 
     <RelativeLayout
+        android:id="@+id/rl_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -94,9 +95,9 @@
         android:id="@+id/btn_load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/rl_container"
         android:text="@string/load"
         android:textAllCaps="false"/>
 
@@ -104,9 +105,9 @@
         android:id="@+id/btn_clean"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/rl_container"
         android:text="@string/clean"
         android:textAllCaps="false"/>
 

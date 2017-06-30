@@ -18,12 +18,11 @@ public class MyApplication extends Application {
 
     public JobManager getJobManager() {
         Configuration config = new Configuration.Builder(mApp)
-                .minConsumerCount(1)
-                .maxConsumerCount(3)
-                .loadFactor(3)
-                .consumerKeepAlive(120)
+                .minConsumerCount(1)//always keep at least one consumer alive
+                .maxConsumerCount(3)//up to 3 consumers at a time
+                .loadFactor(3)//3 jobs per consumer
+                .consumerKeepAlive(120)//wait 2 minute
                 .build();
         return new JobManager(config);
     }
-
 }

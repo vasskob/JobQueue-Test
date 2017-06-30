@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     ProgressBar pbURepoCount;
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
     private MainPresenter presenter;
-    private JobManager mJobManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         Log.d(TAG, "onCreate: ");
 
-        mJobManager = ((MyApplication) getApplication()).getJobManager();
+        JobManager jobManager = ((MyApplication) getApplication()).getJobManager();
 
-        presenter = new MainPresenter(mJobManager);
+        presenter = new MainPresenter(jobManager);
         presenter.attachView(this);
     }
 
@@ -101,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         Log.d(TAG, "onLoadClick: ");
         runProgressBar();
         presenter.loadData();
-        //  initJobManager();
-
     }
 
     private void runProgressBar() {
@@ -116,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
         tvUName.setText("");
         tvURepoCount.setText("");
         ivUAvatar.setImageResource(R.drawable.ic_user_avatar);
+        pbUName.setVisibility(View.GONE);
+        pbURepoCount.setVisibility(View.GONE);
+        pbUAvatar.setVisibility(View.GONE);
     }
 
     @Override
@@ -123,35 +122,4 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onDestroy();
         presenter.detachView();
     }
-
-//    private MainPresenter.OnDataReadyListener listener = new MainPresenter.OnDataReadyListener() {
-//        @Override
-//        public void onUNameReady(String data) {
-//            showUserName(data);
-//        }
-//
-//        @Override
-//        public void onUAvatarReady(String data) {
-//            showUserAvatar(data);
-//        }
-//
-//        @Override
-//        public void onURepoCountReady(int data) {
-//            showUserRepoCount(data);
-//        }
-//    };
-
-//    private void initJobManager() {
-//        Params paramsLow = new Params(Constants.PRIORITY_LOW).requireNetwork().persist().delayInMs(3000);
-//        Params paramsMiddle = new Params(Constants.PRIORITY_MIDDLE).requireNetwork().persist().delayInMs(2000);
-//        Params paramsHeight = new Params(Constants.PRIORITY_HEIGHT).requireNetwork().persist();
-//
-//        UAvatarLoadJob jobHeader = new UAvatarLoadJob(paramsHeight, listener);
-//        URepoCountLoadJob jobTitle = new URepoCountLoadJob(paramsMiddle, listener);
-//        UNameLoadJob jobDetail = new UNameLoadJob(paramsLow, listener);
-//
-//        mJobManager.addJobInBackground(jobHeader);
-//        mJobManager.addJobInBackground(jobTitle);
-//        mJobManager.addJobInBackground(jobDetail);
-//    }
 }

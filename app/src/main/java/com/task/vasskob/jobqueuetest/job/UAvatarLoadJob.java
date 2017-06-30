@@ -12,38 +12,36 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.task.vasskob.jobqueuetest.Constants;
+import com.task.vasskob.jobqueuetest.event.AvatarIsLoadEvent;
 import com.task.vasskob.jobqueuetest.model.User;
-import com.task.vasskob.jobqueuetest.presenter.MainPresenter;
 import com.task.vasskob.jobqueuetest.utils.Parser;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
 
 public class UAvatarLoadJob extends Job {
 
     private static final String TAG = UAvatarLoadJob.class.getSimpleName();
-    private final MainPresenter.OnDataReadyListener listener;
 
-    private OkHttpClient client;
-    private Request request;
-
-    public UAvatarLoadJob(Params params, MainPresenter.OnDataReadyListener listener) {
-        super(params);
-        this.listener = listener;
+    public UAvatarLoadJob() {
+        super(new Params(Constants.PRIORITY_HEIGHT)
+                .requireNetwork()
+                .persist()
+                .groupBy(Groups.MAIN_CONTENT));
     }
 
     @Override
     public void onAdded() {
         Log.d(TAG, "UAvatarLoadJob onAdded: ");
-        client = new OkHttpClient();
-        request = new Request.Builder()
-                .url(Constants.URL)
-                .build();
-
     }
 
     @Override
     public void onRun() throws Throwable {
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .build();
+        OkHttpClient client = new OkHttpClient();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -55,7 +53,7 @@ public class UAvatarLoadJob extends Job {
                 String json = response.body().string();
                 User user = Parser.getParsedUser(json);
 
-                listener.onUAvatarReady(user.getAvatar_url());
+                EventBus.getDefault().post(new AvatarIsLoadEvent(user.getAvatar_url()));
                 Log.d(TAG, "UAvatarLoadJob onResponse: !!! " + json);
             }
         });

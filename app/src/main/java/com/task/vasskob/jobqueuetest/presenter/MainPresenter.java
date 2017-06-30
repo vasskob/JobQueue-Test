@@ -1,40 +1,23 @@
 package com.task.vasskob.jobqueuetest.presenter;
 
 import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.Params;
-import com.task.vasskob.jobqueuetest.Constants;
+import com.task.vasskob.jobqueuetest.event.AvatarIsLoadEvent;
+import com.task.vasskob.jobqueuetest.event.NameIsLoadEvent;
+import com.task.vasskob.jobqueuetest.event.RepoCountIsLoadEvent;
 import com.task.vasskob.jobqueuetest.job.UAvatarLoadJob;
 import com.task.vasskob.jobqueuetest.job.UNameLoadJob;
 import com.task.vasskob.jobqueuetest.job.URepoCountLoadJob;
 import com.task.vasskob.jobqueuetest.view.MainView;
 
-import java.io.Serializable;
+import de.greenrobot.event.EventBus;
 
-public class MainPresenter implements IMainPresenter, Serializable {
+public class MainPresenter implements IMainPresenter {
 
-    private static final String TAG = MainPresenter.class.getSimpleName();
     private JobManager mJobManager;
     private MainView mView;
-    private OnDataReadyListener listener = new OnDataReadyListener() {
-        @Override
-        public void onUNameReady(String data) {
-            mView.showUserName(data);
-        }
-
-        @Override
-        public void onUAvatarReady(String data) {
-            mView.showUserAvatar(data);
-        }
-
-        @Override
-        public void onURepoCountReady(int data) {
-            mView.showUserRepoCount(data);
-        }
-    };
 
     public MainPresenter(JobManager mJobManager) {
         this.mJobManager = mJobManager;
-        //  mJobManager.start();
     }
 
     @Override
@@ -43,34 +26,35 @@ public class MainPresenter implements IMainPresenter, Serializable {
     }
 
     private void initJobManager() {
-        Params paramsLow = new Params(Constants.PRIORITY_LOW).requireNetwork().delayInMs(3000);
-        Params paramsMiddle = new Params(Constants.PRIORITY_MIDDLE).requireNetwork().delayInMs(2000);
-        Params paramsHeight = new Params(Constants.PRIORITY_HEIGHT).requireNetwork();
-
-        UAvatarLoadJob jobAvatar = new UAvatarLoadJob(paramsHeight, listener);
-        UNameLoadJob jobName = new UNameLoadJob(paramsMiddle, listener);
-        URepoCountLoadJob jobRepos = new URepoCountLoadJob(paramsLow, listener);
-
-        mJobManager.addJobInBackground(jobAvatar);
-        mJobManager.addJobInBackground(jobName);
-        mJobManager.addJobInBackground(jobRepos);
+        mJobManager.addJobInBackground(new UAvatarLoadJob());
+        mJobManager.addJobInBackground(new UNameLoadJob());
+        mJobManager.addJobInBackground(new URepoCountLoadJob());
     }
 
     @Override
     public void attachView(MainView view) {
         this.mView = view;
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void detachView() {
         mView = null;
+        EventBus.getDefault().unregister(this);
     }
 
-    public interface OnDataReadyListener extends Serializable {
-        void onUNameReady(String data);
+    @SuppressWarnings("unused")
+    public void onEvent(AvatarIsLoadEvent event) {
+        mView.showUserAvatar(event.getAvatarUrl());
+    }
 
-        void onUAvatarReady(String data);
+    @SuppressWarnings("unused")
+    public void onEvent(NameIsLoadEvent event) {
+        mView.showUserName(event.getUName());
+    }
 
-        void onURepoCountReady(int data);
+    @SuppressWarnings("unused")
+    public void onEvent(RepoCountIsLoadEvent event) {
+        mView.showUserRepoCount(event.getURepoCount());
     }
 }
