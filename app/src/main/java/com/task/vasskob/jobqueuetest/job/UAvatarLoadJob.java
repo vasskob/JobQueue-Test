@@ -62,11 +62,16 @@ public class UAvatarLoadJob extends Job {
     @Override
     protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         Log.d(TAG, "UAvatarLoadJob onCancel: ");
+        // Job has exceeded retry attempts or shouldReRunOnThrowable() has decided to cancel.
     }
 
     @Override
     protected RetryConstraint shouldReRunOnThrowable(@NonNull Throwable throwable, int runCount, int maxRunCount) {
         Log.d(TAG, "UAvatarLoadJob shouldReRunOnThrowable: ");
-        return null;
+        // An error occurred in onRun.
+        // Return value determines whether this job should retry or cancel. You can further
+        // specify a backoff strategy or change the job's priority. You can also apply the
+        // delay to the whole group to preserve jobs' running order.
+        return RetryConstraint.createExponentialBackoff(runCount,1000);
     }
 }
