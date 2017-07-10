@@ -13,7 +13,7 @@ import de.greenrobot.event.EventBus;
 
 public class MainPresenter implements IMainPresenter {
 
-    private JobManager mJobManager;
+    private final JobManager mJobManager;
     private MainView mView;
 
     public MainPresenter(JobManager mJobManager) {

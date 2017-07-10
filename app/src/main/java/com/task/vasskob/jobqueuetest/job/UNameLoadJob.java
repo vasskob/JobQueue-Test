@@ -56,6 +56,7 @@ public class UNameLoadJob extends Job {
             public void onResponse(Response response) throws IOException {
                 String json = response.body().string();
                 User user = Parser.getParsedUser(json);
+                assert user != null;
                 EventBus.getDefault().post(new NameIsLoadEvent(user.getName()));
 
             }

@@ -53,6 +53,7 @@ public class UAvatarLoadJob extends Job {
                 String json = response.body().string();
                 User user = Parser.getParsedUser(json);
 
+                assert user != null;
                 EventBus.getDefault().post(new AvatarIsLoadEvent(user.getAvatar_url()));
                 Log.d(TAG, "UAvatarLoadJob onResponse: !!! " + json);
             }
@@ -72,6 +73,6 @@ public class UAvatarLoadJob extends Job {
         // Return value determines whether this job should retry or cancel. You can further
         // specify a backoff strategy or change the job's priority. You can also apply the
         // delay to the whole group to preserve jobs' running order.
-        return RetryConstraint.createExponentialBackoff(runCount,1000);
+        return RetryConstraint.createExponentialBackoff(runCount, 1000);
     }
 }
